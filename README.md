@@ -1,59 +1,243 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Task Management API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Version: Laravel 11
+Authentication: Laravel Sanctum (Token-based API authentication)
 
-## About Laravel
+Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The Task Management API is a web-based application that allows registered users to manage their daily tasks. Only authenticated users can access the system, ensuring that each user’s tasks remain private.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This API provides functionality to:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Register a new user
 
-## Learning Laravel
+Log in and obtain an access token
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Log out securely
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Create, view, update, and delete tasks
 
-## Laravel Sponsors
+Filter tasks by status (pending, in-progress, completed)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Paginate tasks for easy viewing
 
-### Premium Partners
+All actions are performed through secure API requests, making it suitable for integration with web or mobile applications.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
 
-## Contributing
+Features
+User Management
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+User Registration
 
-## Code of Conduct
+Users can register by providing a name, email, and password.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+The system securely hashes passwords before storing them.
 
-## Security Vulnerabilities
+Successful registration returns the newly created user details.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+User Login
 
-## License
+Registered users can log in using their email and password.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+A secure API token is generated on login, which is required to access task-related features.
+
+User Logout
+
+Authenticated users can log out, which revokes their API token.
+
+Task Management
+
+Create Task
+
+Authenticated users can create a task by providing a title, description, and optional status.
+
+Default status is pending if not specified.
+
+View Tasks
+
+Users can view all their tasks.
+
+Tasks can be filtered by status.
+
+Results are paginated (10 tasks per page).
+
+View Single Task
+
+Users can retrieve a single task by its ID.
+
+The system ensures users can only access their own tasks.
+
+Update Task
+
+Users can update the title, description, or status of a task.
+
+Only the task owner can update a task.
+
+Delete Task
+
+Users can delete a task.
+
+Only the task owner can delete their task.
+
+
+API Endpoints
+Public Endpoints (No Authentication Required)
+
+| Endpoint              | Method | Description                              |
+| --------------------- | ------ | ---------------------------------------- |
+| `/api/register`       | POST   | Register a new user                      |
+| `/api/user-login`     | POST   | Login and receive API token              |
+
+
+Protected Endpoints (Authentication Required)
+
+| Endpoint            | Method | Description                                    |
+| ------------------- | ------ | ---------------------------------------------- |
+| `/api/logout`       | POST   | Logout user and revoke token                   |
+| `/api/user`         | GET    | Retrieve logged-in user information            |
+| `/api/get/tasks`    | GET    | List all user tasks (supports `status` filter) |
+| `/api/task`         | POST   | Create a new task                              |
+| `/api/tasks/{task}` | GET    | View a specific task                           |
+| `/api/tasks/{task}` | PUT    | Update a specific task                         |
+| `/api/tasks/{task}` | DELETE | Delete a specific task                         |
+
+
+Database Structure
+Users Table
+
+| Column     | Type      | Description                |
+| ---------- | --------- | -------------------------- |
+| id         | int       | Auto-increment primary key |
+| name       | string    | Full name of user          |
+| email      | string    | Email address              |
+| password   | string    | Hashed password            |
+| timestamps | timestamp | Created and updated time   |
+
+
+Tasks Table
+
+| Column      | Type      | Description                                        |
+| ----------- | --------- | -------------------------------------------------- |
+| id          | int       | Auto-increment primary key                         |
+| user_id     | int       | ID of the task owner (foreign key)                 |
+| title       | string    | Title of the task                                  |
+| description | text      | Detailed description of the task                   |
+| status      | enum      | Task status: `pending`, `in-progress`, `completed` |
+| timestamps  | timestamp | Created and updated time                           |
+
+
+Setup Instructions
+Requirements
+
+PHP >= 8.2
+Composer
+MySQL or PostgreSQL database
+Laravel 11
+
+Installation Steps
+
+1. Clone the repository
+  git clone https://github.com/princessvincent/AfriFoundersApi.git
+  cd <repository-folder>
+
+2. Install dependencies
+   composer install
+
+3. Configure environment
+   Copy .env.example to .env
+   Set your database credentials in .env
+
+   DB_CONNECTION=pgsql
+   DB_HOST=127.0.0.1
+   DB_PORT=5432
+   DB_DATABASE=task_manager
+   DB_USERNAME=root
+   DB_PASSWORD=secret
+
+4. Generate application key
+   php artisan key:generate
+
+5. Run migrations
+   php artisan migrate
+
+6. Serve the application
+   php artisan serve
+
+The API will be accessible at http://localhost:8000.
+
+Authentication
+
+The application uses Laravel Sanctum for API token-based authentication.
+After logging in, a user receives an access token.
+All protected routes require the token to be sent in the Authorization header as follows:
+
+Authorization: Bearer <access_token>
+
+Testing
+feature tests is included to ensure the API works correctly.
+
+Example tests include user registration, login, and task creation.
+
+Run tests using:
+
+php artisan test
+
+for specific test file
+
+php artisan test tests/Feature/TaskApiTest.php
+
+
+Error Handling
+
+The API returns JSON responses for all errors.
+
+Common error messages:
+
+Unauthorized – Accessing a task not owned by the user
+
+The provided credentials are incorrect – Invalid login
+
+Validation errors – Missing or invalid input
+
+Notes
+
+Each user can only access their own tasks.
+
+Tasks can have one of three statuses: pending, in-progress, completed.
+
+API responses follow a consistent JSON structure for easier integration with web or mobile applications.
+
+Example JSON Responses
+
+Register User
+{
+"message": "User registered successfully.",
+"user": {
+"id": 1,
+"name": "Prisca Eze",
+"email": "prisca@example.com",
+"created_at": "2025-11-08T12:00:00.000000Z",
+"updated_at": "2025-11-08T12:00:00.000000Z"
+}
+}
+
+Create Task
+{
+"message": "Task created successfully",
+"task": {
+"id": 1,
+"user_id": 1,
+"title": "Test Task",
+"description": "This is a test task",
+"status": "pending",
+"created_at": "2025-11-08T12:10:00.000000Z",
+"updated_at": "2025-11-08T12:10:00.000000Z"
+}
+}
+
+Conclusion
+
+This Laravel 11 Task Management API provides a secure, efficient, 
+and user-friendly way for authenticated users to manage their tasks.
+It’s fully tested, easy to set up, and ready to integrate with web or 
+mobile applications.
