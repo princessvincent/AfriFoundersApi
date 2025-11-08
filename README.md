@@ -185,6 +185,17 @@ for specific test file
 `php artisan test tests/Feature/TaskApiTest.php`
 
 
+# Postman Testing
+To test the API with Postman:
+
+- Set Headers for all requests:
+  
+`Accept: application/json
+Content-Type: application/json`
+
+- Use the following Postman collection link for easy testing:
+  https://documenter.getpostman.com/view/27521377/2sB3WsQKwN
+
 # Error Handling
 
 The API returns JSON responses for all errors.
